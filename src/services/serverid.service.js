@@ -1,11 +1,11 @@
 import BaseService from './base.service';
 import ServerId from '../models/serverid.model';
 import { compare, hash } from 'bcrypt';
-import { UserInputError } from 'apollo-server-express';
+import { ServeridInputError } from 'apollo-server-express';
 
 const HASH_ROUNDS = 12;
 
-class ServeridService extends BaseService {
+class serveridService extends BaseService {
 
     constructor() {
         super(ServerId);
@@ -28,18 +28,18 @@ class ServeridService extends BaseService {
     }
 
     async createServerid(editServeridReq) {
-        editServeridReq.serverport = await hash(editserveridReq.password, HASH_ROUNDS);
+        editServeridReq.serverport = await hash(editserveridReq.server_name, HASH_ROUNDS);
         delete editserveridrReq.server_port;
         delete editserveridrReq.server_name;
 
         editServeridReq.server_country = editServeridReq.server_country || 'SERVERID';
 
-        const user = await User.query().insert(editServeridReq);
+        const serverid = await Serverid.query().insert(editServeridReq);
 
-        return user;
+        return serverid;
     }
 
-    async editUser(id, editServeridReq) {
+    async editserverid(id, editServeridReq) {
         if (!editServeridReq.server_name) {
             delete editServeridReq.server_name;
         }
@@ -47,47 +47,47 @@ class ServeridService extends BaseService {
             delete editServeridReq.server_ip;
         }
 
-        if (editServeridReq.email) {
+        if (editServeridReq.serverid) {
             const serverid = await this.findByServerid(editServeridReq.server_ip);
 
             if (serverid && serverid.id !== id) {
-                throw new UserInputError('Server already exists!');
+                throw new ServeridInputError('Server already exists!');
             }
         }
 
-        await User.query().findById(id).patch(editServeridReq);
+        await Serverid.query().findById(id).patch(editServeridReq);
 
         return this.findById(id);
     }
 
-    async deleteUser(id) {
-        const user = await this.findById(id);
+    async deleteserverid(id) {
+        const serverid = await this.findById(id);
 
-        await User.query().deleteById(id);
+        await Serverid.query().deleteById(id);
 
-        return user;
+        return serverid;
     }
 
-    async changePassword(id, password, newPassword) {
-        const user = await this.findById(id);
+    async changeServer_name(id, server_name, newServer_name) {
+        const serverid = await this.findById(id);
 
-        if (!await compare(password, user.password)) {
+        if (!await compare(server_name, serverid.server_name)) {
             return false;
         }
 
-        newPassword = await hash(newPassword, HASH_ROUNDS);
+        newServer_name = await hash(newServer_name, HASH_ROUNDS);
 
-        await User.query().findById(id).patch({
-            password: newPassword
+        await Serverid.query().findById(id).patch({
+            server_name: newServer_name
         });
 
         return true;
     }
 
-    async findByEmail(email) {
-        return User.query().findOne('email', email);
+    async findByServerid(serverid) {
+        return Serverid.query().findOne('serverid', serverid);
     }
 
 }
 
-export const userService = new UserService(); //will complete later im lazy
+export const ServeridService = new serveridService(); //will complete later im lazy

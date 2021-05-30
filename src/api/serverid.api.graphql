@@ -1,0 +1,37 @@
+extend type Query {
+
+    serveridById(id: ID!): Serverid
+
+    serverids: [Serverid!]!
+}
+
+extend type Mutation {
+
+    editserverid(id: ID!, editServeridReq: EditServeridReq!): Serverid
+
+    deleteserverid(id: ID!): Serverid
+}
+
+type Serverid {
+    id: ID!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    server_name: String!
+    server_ip: String!
+    server_port: String!
+    server_description: String!
+    votifier_host: String!
+    votifier_port: String!
+    votifier_public_key: String!
+    server_website: String!
+    discord_server: String!
+    server_country: String
+}
+
+input EditServeridReq {
+    server_name: String!
+    server_ip: String!
+    server_port: String!
+    server_description: String!
+    server_country: String
+}

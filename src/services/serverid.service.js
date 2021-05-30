@@ -90,4 +90,4 @@ class serveridService extends BaseService {
 
 }
 
-export const ServeridService = new serveridService(); //will complete later im lazy
+export const ServeridService = new serveridService();
